@@ -1,69 +1,63 @@
-let li = document.getElementById(document.getElementById('column').value).children
+let li = document.getElementById('todo').children
 let mySearch = document.getElementById('mySearch');
 let mySort = document.getElementById('tri');
-let array = [];
-function keyAPress(e) {
-	if (e.key === 'a') {
-		document.getElementById('addClass').click();
-		document.removeEventListener('keydown', keyAPress);
-	}
-}
-
-document.addEventListener('keydown', keyAPress);
 
 document.addEventListener('keydown', (e) => {
-	if (e.key === 'Escape')
-	document.addEventListener('keydown', keyAPress);
+	if (e.key === 'a')
+		document.getElementById('addClass').click();
 });
 
-document.getElementById('close').addEventListener('click', () => {document.addEventListener('keydown', keyAPress);});
-
 mySearch.addEventListener('keyup', () => {
-	for(let i = 0; i < array.length; i++) {
-		if(array[i].children[1].children[0].value.toLowerCase().includes(mySearch.value.toLowerCase())) {
-			array[i].style.display = "block";
-		} else {
-			array[i].style.display = "none";
-		}
+	for (i = 0; i < li.length; i++) {
+		if (li[i].children[1].children[0].value.includes(mySearch.value))
+			li[i].style.display = "";
+		else
+			li[i].style.display = "none";
 	}
 });
 
 mySort.addEventListener('change', () => {
 	for (i = 0; i < li.length; i++) {
-		if (array[i].children[1].children[0].style.color === mySort.value || mySort.value === 'all')
-			array[i].style.display = "";
+		if (li[i].children[1].children[0].style.color === mySort.value || mySort.value === 'all')
+			li[i].style.display = "";
 		else
-			array[i].style.display = "none";
+			li[i].style.display = "none";
 	}
 });
 
-function submit() { // POUR AVOIR UNE PORTEE GLOBALE
+
+
+document.getElementById("submit").addEventListener('click', submit);
+document.getElementById('myTask').addEventListener('keydown', (e) => {
+	if (e.key === "Enter") {
+		submit();
+		document.getElementById('close').click();
+	}
+});
+
+function submit() {
 	let value = document.getElementById('myTask').value;
 
 	if (value != "") {
 		let li = document.createElement('li');
 		let label = Math.floor(Math.random()*1000);
-		li.innerHTML = "<input type='checkbox' class='checkbox' label=" + label + "><label for="+ label +">" + "<input type='text' class='inputLi'>" + "</label><button class='editButton'>Edit</button><span class='closeLi'>&times;</span>";
+		li.innerHTML = "<input type='checkbox' class='checkbox' label=" + label + "><label for="+ label +">" + "<input type='text'>" + "</label><button>Edit</button><span>&times;</span>";
 		li.setAttribute("class", "dragItem");
 		li.children[1].children[0].value = value;
 		li.children[1].children[0].setAttribute("readonly", "readonly");
 		li.children[1].children[0].style.color = document.getElementById('select').value;
-		document.getElementById(document.getElementById('column').value).appendChild(li);
-
-		array.push(li); // LES ELEMENTS SONT MAINTENANT STOCKER ICI
-
+		
+		document.getElementById('todo').appendChild(li);
 		document.getElementById('myTask').value = "";
 
 		li.children[0].addEventListener('change', (e) => {
 			e.stopPropagation();
 			li.children[1].children[0].classList.toggle("lineThrough");
 		});
-
 		li.lastChild.addEventListener('click', (e) => {
 			e.stopPropagation();
 			li.remove();
 		});
-
 		li.children[2].addEventListener('click', (e) => {
 			e.stopPropagation();
 			li.children[1].children[0].toggleAttribute("readonly");
@@ -75,23 +69,11 @@ function submit() { // POUR AVOIR UNE PORTEE GLOBALE
 				li.children[1].children[0].setAttribute("readonly", "readonly");
 		});
 		li.addEventListener('mousedown', mouseDownHandler);
-		document.addEventListener('keydown', keyAPress);
 		// Array.from(document.getElementsByClassName("dragItem")).forEach(item => {
 		// 	item.addEventListener('mousedown', mouseDownHandler);
 		// });
 	}
 }
-
-document.getElementById("submit").addEventListener('click', submit);
-
-document.getElementById('myTask').addEventListener('keyup', (e) => {
-	if (e.key === "Enter") {
-		submit();
-		var button = document.getElementById('close');
-		button.click();
-		console.log(typeof button);
-	}
-});
 
 let x = 0;
 let y = 0;
@@ -123,14 +105,10 @@ const mouseDownHandler = function (e) {
 	const rect = dragElem.getBoundingClientRect();
     x = e.pageX - rect.left;
     y = e.pageY - rect.top;
-	
 
 	//e.stopPropagation();
 	document.addEventListener('mousemove', mouseMouveHandler);
 	document.addEventListener('mouseup', mouseUpHandler);
-	
-
-
 }
 
 const mouseMouveHandler = function (e) {
@@ -148,7 +126,6 @@ const mouseMouveHandler = function (e) {
 	}
 
 	placeholder.style.height = rect.height + "px";
-	placeholder.style.width = " 100px!important";
 
 	if(prevElem && isAbove(dragElem, prevElem)) {
 		swap(placeholder, dragElem);
@@ -159,22 +136,10 @@ const mouseMouveHandler = function (e) {
 		swap(nextElem, placeholder);
 		swap(nextElem, dragElem);
 	}
+
 	dragElem.style.position = "absolute";
-	console.log(dragElem.style.width);
-
-
-	let week = document.getElementById("week");
-	var otherY = week.offsetTop;// other div x position
-	console.log("autre bloc : " + otherY);
 	dragElem.style.top = (e.pageY - y) + 'px';
 	dragElem.style.left = (e.pageX - x) + 'px';
-	console.log("mon bloc : " + dragElem.style.top);
-
-	if (parseInt(dragElem.style.top) >= otherY ) {
-	  console.log("collision");
-	}
-
-
 }
 
 const mouseUpHandler = function() {
