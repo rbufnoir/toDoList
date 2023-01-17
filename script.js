@@ -3,8 +3,10 @@ let mySearch = document.getElementById('mySearch');
 let mySort = document.getElementById('tri');
 
 document.addEventListener('keydown', (e) => {
-	if (e.key === 'a')
-		document.getElementById('addClass').click();
+	if (e.key === 'a') {
+		let bModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+		bModal.show();
+	}
 });
 
 mySearch.addEventListener('keyup', () => {
