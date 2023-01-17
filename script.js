@@ -1,10 +1,10 @@
 let li = document.getElementById('todo').children
 let mySearch = document.getElementById('mySearch');
 let mySort = document.getElementById('tri');
+let bModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
 
 document.addEventListener('keydown', (e) => {
 	if (e.key === 'a') {
-		let bModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
 		bModal.show();
 	}
 });
